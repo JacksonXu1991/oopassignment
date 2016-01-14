@@ -7,6 +7,7 @@ use yii\web\Controller;
 use app\models\Status;
 use app\models\DataLoader;
 use app\models\DataValidater;
+use app\models\UserManager;
 
 class AdminController extends Controller
 {
@@ -33,6 +34,7 @@ class AdminController extends Controller
     // 工具方法：请求处理
     // $spData不为null说明未使用通用接口格式传入数据
     private function requestIterator( $actionName  , $actionDest , $mustCheckMetaList , $spData = null ) {
+        
         $retSet = array(); // 返回数据
         $retStatus = Status::RET_SUCCESSFUL;    // 返回状态
         $retCnt = 0; // 返回数目
@@ -56,7 +58,7 @@ class AdminController extends Controller
                     $mgr = null;
                     switch ( $actionDest ) { // 选择操作的对象
                         case "user":
-                            
+                            $mgr = new UserManager();
                             break;
 
                         default:
@@ -84,7 +86,18 @@ class AdminController extends Controller
                         case "add":          // 添加
                             $singleStatus = $this->doAdd( $mgr, $metaData , $srcData , $retContainer );
                             break;
-                       
+                        case "delete":      // 删除
+                            $singleStatus = $this->doDelete( $mgr , $metaData ,  $srcData , $retContainer );
+                            break;
+                        case "list":        // 列表
+                            $singleStatus = $this->doList( $mgr , $metaData , $srcData , $retContainer );
+                            break;
+                        case "modify":      // 编辑
+                            $singleStatus = $this->doModify( $mgr , $metaData ,  $srcData , $retContainer );
+                            break;
+                        case "browse":      // 查看
+                            $singleStatus = $this->doBrowse( $mgr , $metaData ,  $srcData , $retContainer );
+                            break;                               
                         default:            // 不存在的操作
                             $singleStatus = Status::RET_ACTION_NOT_DEFINED;
                             break;
@@ -139,8 +152,8 @@ class AdminController extends Controller
     // 工具方法： 执行删除
     private function doDelete( $mgr , $metaData , $srcData , &$retDataContainer ) {
         // 这里未用到retDataContainer
-        if( isset( $metaData[ "logic_pkval" ] ) ) {
-            return $mgr->adminDelete( $metaData[ "logic_pkval" ] );
+        if( isset( $srcData[ "logic_pkval" ] ) ) {
+            return $mgr->adminDelete( $srcData[ "logic_pkval" ] );
         } else {
             return Status::RET_INVALID_INPUT_PARAM_FORMAT;
         }
@@ -149,8 +162,8 @@ class AdminController extends Controller
     // 工具方法：执行编辑
     private function doModify( $mgr , $metaData , $srcData , $retContainer ) {
         // 这里未用到retDataContainer
-        if( isset( $metaData[ "logic_pkval" ] ) ) {
-            $logicPKVal = $metaData[ "logic_pkval" ];
+        if( isset( $srcData[ "logic_pkval" ] ) ) {
+            $logicPKVal = $srcData[ "logic_pkval" ];
             return $mgr->adminUpdate( $logicPKVal , $srcData );
         } else {
             return Status::RET_INVALID_INPUT_PARAM_FORMAT;
@@ -159,8 +172,8 @@ class AdminController extends Controller
     
     // 工具方法：执行查看
     private function doBrowse( $mgr , $metaData , $srcData , &$retContainer ) {
-        if( isset( $metaData[ "logic_pkval" ] ) ) {
-            $logicPKVal = $metaData[ "logic_pkval" ];
+        if( isset( $srcData[ "logic_pkval" ] ) ) {
+            $logicPKVal = $srcData[ "logic_pkval" ];
             return $mgr->adminBrowse( $logicPKVal , $retContainer );
         } else {
             return Status::RET_INVALID_INPUT_PARAM_FORMAT;
