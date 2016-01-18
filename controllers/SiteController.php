@@ -11,7 +11,7 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-    
+    public $myscript = '';
     public function init(){
         $this->enableCsrfValidation = false;
     }
@@ -56,7 +56,7 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
-
+	
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {

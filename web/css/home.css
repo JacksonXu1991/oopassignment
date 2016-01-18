@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+.container {
+  max-width: none !important;
+  width: 980px;
+}
+
+
+.jumbotron{
+  background-color: #EEEEEE;
+  padding-bottom: 80px;
+  padding-top: 80px;
+}
+
+.mt60{
+	margin-top: 60px;
+}
+.mt100{
+	margin-top: 100px;
+}
+.mt20{
+	margin-bottom: 20px;
+}
+
+#teacherTable td{
+	width:50%;
+}
+
+#adminTable td{
+	width:25%
+}
+#adminCheckTable td{
+	width:20%
+}
